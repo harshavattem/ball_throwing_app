@@ -1,0 +1,133 @@
+Iterative System Example : Random Ball Throwing
+
+* Introduction 
+  
+  The application uses the p5 JavaScript framework to show an infinitely
+  iterative system of four people throwing a ball randomly at each
+  other. A button is clicked to have the ball thrown, and the ball moves
+  randomly to one of the three others.
+
+* Implementation
+
+** Variables 
+
+*** =na=, =nb=, =nc=, =nd= : To create the circles denoting people.
+*** =prev=, =b1=, =next= : Variables to denote the previous, current, and next position of the ball b1. Each has properties num, x, y.
+*** =a=, =b=, =c=, =d= : Denote the four people. Each has a pair of coordinates and a unique identifying number, all of which are copied to the ball when it is at their place.
+*** =button_start= : To create the button which will throw the ball once.
+
+#+BEGIN_SRC javascript
+
+var na,nb,nc,nd,prev = { num:1, x:100, y:100}, b1 = { num:1, x:100, y:100},  next = { num:1, x:0, y:0},  i=0, a = { num : 1, x : 100, y : 100}, b = { num:2, x : 300, y : 100}, c = { num:3, x : 100, y : 300}, d = { num:4, x : 300, y : 300}, button_start;
+
+#+END_SRC
+
+
+** Setup
+   
+   Four blue ellipses are created, representing people, and a red one as a
+   ball. On pressing the button 'Throw', the ball is sent to one of the three
+   members not in possession of the ball. This can continue indefinitely.
+
+#+BEGIN_SRC javascript
+
+{
+
+  // create canvas
+  createCanvas(windowWidth, windowHeight);
+
+  //colour the circles blue
+  fill(0,0,200);
+  
+  //create four circles to represent the four people
+  ellipse(100,100,20,20);
+  ellipse(300,100,20,20);
+  ellipse(100,300,20,20);
+  ellipse(300,300,20,20);
+
+  //text to denote the people A, B, C, D
+  na = createElement('h6','A');
+  na.position(70,70);
+  nb = createElement('h6','B');
+  nb.position(320,70);
+  nc = createElement('h6','C');
+  nc.position(70,320);
+  nd = createElement('h6','D');
+  nd.position(320,320); 
+
+  //creating a button to throw
+  button_start = createButton('Throw');
+  button_start.position(500, 200);
+ 
+
+
+  button_start.mouseClicked(pass);
+
+
+}
+
+#+END_SRC
+
+
+** Functions
+
+There is only one function in this application,to pass the ball around. It
+chooses a random number associated with a person, makes sure the ball isn't with that person already, and moves the ball to the new person. The var =prev= takes the value of the previous =b1= and =b1= takes a new value from =next= .
+
+
+*** Animate
+
+    #+BEGIN_SRC javascript
+    
+    {
+  //generate a position for thw ball to be next, without it coinciding with its current position
+  do
+  {
+  next.num = Math.floor(Math.random()*4)+1;
+  } 
+  while(next.num === b1.num);
+
+  //match the random number to a person, to whom the ball will go next
+  switch(next.num)
+    {
+    case 1:
+{ 
+    next = a;
+    break;
+}
+    case 2:
+{
+    next = b;
+    break;
+}
+    case 3:
+{
+    next = c;
+    break;
+} 
+    case 4:
+{
+    next = d;
+    break;
+}
+    }
+
+    //update the values of positions, and create circles to make it appear as if the ball has moved
+
+    prev.num = b1.num;
+    prev.x = b1.x;
+    prev.y = b1.y;
+    b1.num = next.num;
+    b1.x = next.x;
+    b1.y = next.y;
+    fill(0,0,200);
+    ellipse(prev.x,prev.y,15,15);
+    fill(200,0,0);
+    ellipse(b1.x,b1.y,15,15);
+}  
+
+
+    
+    #+END_SRC
+
+ 
